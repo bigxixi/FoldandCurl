@@ -1,6 +1,6 @@
 # FoldandCurl
 An Adobe After Effect script to make curling and folding.  
-轻松制作卷曲、折叠效果.[`观看演示`](http://www.bilibili.com/video/av8042868/index_2.html)
+AE脚本，轻松制作卷曲、折叠效果.[观看演示](http://www.bilibili.com/video/av8042868/index_2.html)
 </br>
 ## Demo:
 ![](https://github.com/bigxixi/ReadMe-Resources/blob/master/FoldandCurl/fold_demo.gif)
