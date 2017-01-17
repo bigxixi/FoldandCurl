@@ -5,7 +5,6 @@ An Adobe After Effect script to make curling and folding.
 AE脚本，轻松制作卷曲、折叠效果.  
 [->观看演示1<-](http://www.bilibili.com/video/av8042868/index_2.html)  
 [->观看演示2<-](http://www.bilibili.com/video/av8042868/index_2.html)  
-</br>
 ## GIF Demos:
 ![](https://github.com/bigxixi/ReadMe-Resources/blob/master/FoldandCurl/fold_demo.gif)
 ![](https://github.com/bigxixi/ReadMe-Resources/blob/master/FoldandCurl/curl_demo.gif)  
@@ -19,8 +18,9 @@ Or you can copy the `SaveFrameAsPNG-Plus.jsx` to your AE script folder:
 >`C:\Program Files\Adobe\Adobe After Effects <version>\Support Files\Script\ScriptUI Panels\`  
 >**Mac:**  
 >`/Applications/Adobe After Effects <version>/Scripts/ScriptUI Panels/`  
-Then you can run it from the AE Window menu.
+Then you can run it from the AE Window menu.  
 </br>
+
 ### How to use:  
 1. Select layer(s) as an element to fold or curl.  
 The script generates the curl chain by a layer's width or height, which means layers like textlayer or shapelayer should be pre-composed and set the width and height to work properly.  
