@@ -6,7 +6,7 @@ AE脚本，轻松制作卷曲、折叠效果.
 [->观看演示1<-](http://www.bilibili.com/video/av8042868/index_2.html)  
 [->观看演示2<-](http://www.bilibili.com/video/av8042868/index_2.html)  
 </br>
-## Demo:
+## GIF Demos:
 ![](https://github.com/bigxixi/ReadMe-Resources/blob/master/FoldandCurl/fold_demo.gif)
 ![](https://github.com/bigxixi/ReadMe-Resources/blob/master/FoldandCurl/curl_demo.gif)  
 
