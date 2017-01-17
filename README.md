@@ -36,4 +36,14 @@ The script generates the curl chain by a layer's width or height, which means la
 **How to control:**  
  1. Select the root element - effect - angle control to control the fold or curl progress.  
  2. You can toggle the orientation of each "sub chain" by just selecting them.  
+ 
+## Donation:
+Thank you very much!  
+
+[<img src="http://bigxixi.com/donate/index.hyperesources/paypal.png" width="30%" height="30%">](https://www.paypal.me/bigxixi/)  
+## 求打赏:
+如果您觉得本插件好用，欢迎打赏，感谢您的支持！  
+
+[<img src="http://bigxixi.com/donate/index.hyperesources/wechat.png" width="30%" height="30%">](http://bigxixi.com/donate)
+[<img src="http://bigxixi.com/donate/index.hyperesources/alipay.jpg" width="30%" height="30%">](http://bigxixi.com/donate)  
 
