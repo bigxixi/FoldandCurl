@@ -1,7 +1,7 @@
 //Script by bigxixi, contact xixi@bigxixi.com
 (function ALL(thisObj)
 {
-	var ScriptName = "Fold and Curl v1.0";
+	var ScriptName = "Fold and Curl v1.1";
 	var Description = "A script to make curling and folding.";
 	var Direction = "Direction";
 	var Up = "up";
@@ -15,7 +15,8 @@
     var FromBefore = "Link to Preview";
 	var GButton = "Generate";
 	var HButton = "Help";
-    var HelpText =  ' How to Use:\n' +
+    var HelpText =  'update: now you can add some delay and spring effect to the chain.\n' +    
+                    ' How to Use:\n' +
                     '1. Select layer(s) as an element to fold or curl.\n' +
                     'The script generates the curl chain by a layer\'s width or height, which means layers like textlayer or shapelayer should be pre-composed and set the width and height to work properly.\n' +
                     '2. Take a direction.\n' +
@@ -33,7 +34,13 @@
                     '\n' +
                     'contact: xixi@bigxixi.com\n';
     var Angle = "Angel";
-    var ChangeAngle = "Change Orientation";
+    var ChangeAngle = "Change_Orientation";
+    var SpringCheck = "Add_Spring_Effect";
+    var Delay = "Delay";
+    var AdjustRotation = "Adjust_Rotation";
+    var AMP = "AMP";
+    var Freq = "Frequency";
+    var Decay = "Decay";
 	var Error1 = "Error1";
     var Error2 = "Error2";
     var Error3 = "Error3";
@@ -41,7 +48,7 @@
 	var Alert2 = "No layers selected.";
 	var ScriptNotRun = "Script is down.Please restart it or contact xixi@bigxixi.com ";
 	if($.locale.toLowerCase() == "zh_cn"){
-		ScriptName = "卷曲与折叠脚本 v1.0";
+		ScriptName = "卷曲与折叠脚本 v1.1";
 		Description = "轻松制作卷曲、折叠效果！";
 		Direction = "方向";
 		Up = "上";
@@ -56,8 +63,15 @@
 		GButton = "生成";
 		HButton = "帮助";
         Angle = "折叠角度";
+        SpringCheck = "增加弹性效果";
+        Delay = "延迟";
+        AdjustRotation = "调整旋转";
+        AMP = "振幅";
+        Freq = "频率";
+        Decay = "阻尼";
         ChangeAngle = "换方向";
-        HelpText =  '使用步骤：\n' +
+        HelpText =  '更新：延迟、弹性效果现已加入豪华午餐，可以在根元素的控制面板调整。'
+                    '使用步骤：\n' +
                     '1、选中一个或多个图层，每个被选中的图层将作为被折叠的基本元素。\n' +
                     '注意：生成后每个元素是根据图层的宽或高属性来判断贴合的，也就是说如果想将文字、形状图层等作为基本元素，建议先预合成并设置好长宽再进行。\n' +
                     '\n' +
@@ -188,17 +202,58 @@
                                     alert(Error1);
                                     break;
                                 };
+                                //remove all effects
+                                for(j = layer.Effects.numProperties; j > 0; j--){
+                                    layer.Effects.property(j).remove();
+                                }
                                 var tempRoot = layer.duplicate();
                                     tempRoot.transform.anchorPoint.setValue([aXnew,aYnew,0]);
                                     tempRoot.transform.position.setValue([pXnew,pYnew,0]);
-                                tempRoot.comment = dirTemp;              
+                                tempRoot.comment = dirTemp;
+                                var angle = layer.Effects.addProperty("ADBE Angle Control");
+                                var angleNameTemp = Angle + "_" + dirTemp;
+                                    angle.name = angleNameTemp;
+                                var delay = layer.Effects.addProperty("ADBE Slider Control");
+                                var delayNameTemp = Delay + "_" + dirTemp;
+                                    delay.name = delayNameTemp;
+                                layer.effect(delayNameTemp)("ADBE Slider Control-0001").setValue(0);
+                                var spring = layer.Effects.addProperty("ADBE Checkbox Control");
+                                var springNameTemp = SpringCheck + "_" + dirTemp;
+                                    spring.name = springNameTemp;
+                                layer.effect(springNameTemp)("ADBE Checkbox Control-0001").setValue(0);
+                                var amp = layer.Effects.addProperty("ADBE Slider Control");
+                                var ampNameTemp = AMP + "_" + dirTemp;
+                                    amp.name = ampNameTemp;
+                                layer.effect(ampNameTemp)("ADBE Slider Control-0001").setValue(0.1);
+                                var freq = layer.Effects.addProperty("ADBE Slider Control");
+                                var freqNameTemp = Freq + "_" + dirTemp;
+                                    freq.name = freqNameTemp;
+                                layer.effect(freqNameTemp)("ADBE Slider Control-0001").setValue(2);
+                                var decay = layer.Effects.addProperty("ADBE Slider Control");
+                                var decayNameTemp = Decay + "_" + dirTemp;
+                                    decay.name = decayNameTemp;
+                                layer.effect(decayNameTemp)("ADBE Slider Control-0001").setValue(2);     
                                 if(fromPrev.value == 0 || layer.parent == null){
-                                    layer.comment = dirTemp + "Root";
+                                    layer.comment = dirTemp + "\n0\nRoot";
+                                    layer.effect(angleNameTemp)("ADBE Angle Control-0001").expression = 'if(effect("' + springNameTemp + '")("ADBE Checkbox Control-0001").value == 1){\n' +
+                                                                                                        'amp = effect("' + ampNameTemp + '")("ADBE Slider Control-0001");\n' +
+                                                                                                        'freq = effect("' + freqNameTemp + '")("ADBE Slider Control-0001");\n' +
+                                                                                                        ' decay = effect("' + decayNameTemp + '")("ADBE Slider Control-0001");\n' +
+                                                                                                        ' n = 0;\n' +
+                                                                                                        'if (numKeys > 0){\n' +
+                                                                                                        ' n = nearestKey(time).index;\n' +
+                                                                                                        ' if (key(n).time > time){n--;}\n' +
+                                                                                                        '   }\n' +
+                                                                                                        ' if (n == 0){ t = 0;}\n' +
+                                                                                                        ' else{t = time - key(n).time;}\n' +
+                                                                                                        ' if (n > 0){\n' +
+                                                                                                        ' v = velocityAtTime(key(n).time - 0.1*thisComp.frameDuration);\n' +
+                                                                                                        '  value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t);\n' +
+                                                                                                        '    }\n' +
+                                                                                                        ' else{value};\n' +
+                                                                                                        '}else{value}\n';         
                                     layer.transform.anchorPoint.setValue([aXnew,aYnew,0]);
                                     layer.transform.position.setValue([pXnew,pYnew,0]);
-                                    var angle = layer.Effects.addProperty("ADBE Angle Control");
-                                    var angleNameTemp = Angle + "_" + dirTemp;
-                                        angle.name = angleNameTemp;
                                     if(expAxiz%2 != 0){
                                         layer.transform.orientation.expression = "[0,-(transform.yRotation%360)*0.5,0]";
                                         layer.transform.yRotation.expression = "effect('" + angleNameTemp + "')('ADBE Angle Control-0001')"; 
@@ -207,12 +262,16 @@
                                         layer.transform.xRotation.expression = "effect('" + angleNameTemp + "')('ADBE Angle Control-0001')"; 
                                     }
                                 }else{
+                                    layer.comment += "\n" + dirTemp + "\n0\nRoot";
                                     var angle = layer.Effects.addProperty("ADBE Angle Control");
                                     var angleNameTemp = Angle + "_" + dirTemp;
                                         angle.name = angleNameTemp;
                                     var changeDirection = layer.Effects.addProperty("ADBE Checkbox Control");
                                     var changeDirectionNameTemp = ChangeAngle + "_" + dirTemp;
                                         changeDirection.name = changeDirectionNameTemp;
+                                    // var adjustRotation = layer.Effects.addProperty("ADBE Slider Control");
+                                    // var adjustRotationTemp = AdjustRotation + "_" + dirTemp;
+                                    //     adjustRotation.name = adjustRotationTemp;
                                     ///check parent
                                     if(expAxiz%2 != 0){
                                         layer.effect(angleNameTemp)('ADBE Angle Control-0001').expression = "(2*effect('" + changeDirectionNameTemp + "')('ADBE Checkbox Control-0001')-1)*transform.xRotation";
@@ -242,26 +301,27 @@
                                     if(expAxiz == 1){
                                         tempLayer[i].transform.position.setValue([(pXnew + w*(i+1)),pYnew,0]);
                                         tempLayer[i].transform.xRotation.expression = "";
-                                        tempLayer[i].transform.yRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001")';
+                                        tempLayer[i].transform.yRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001").valueAtTime(time-' + 'thisComp.layer("' + layer.name + '").effect("' + delayNameTemp + '")("ADBE Slider Control-0001").value*'+ i +'/1000)';
                                     }else if(expAxiz == 2){
                                         tempLayer[i].transform.position.setValue([pXnew,(pYnew - h*(i+1)),0]);
-                                        tempLayer[i].transform.xRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001")';
+                                        tempLayer[i].transform.xRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001").valueAtTime(time-' + 'thisComp.layer("' + layer.name + '").effect("' + delayNameTemp + '")("ADBE Slider Control-0001").value*'+ i +'/1000)';
                                         tempLayer[i].transform.yRotation.expression = "";
                                     }else if(expAxiz == 3){
                                         tempLayer[i].transform.position.setValue([(pXnew - w*(i+1)),pYnew,0]);
                                         tempLayer[i].transform.xRotation.expression = "";
-                                        tempLayer[i].transform.yRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001")';
+                                        tempLayer[i].transform.yRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001").valueAtTime(time-' + 'thisComp.layer("' + layer.name + '").effect("' + delayNameTemp + '")("ADBE Slider Control-0001").value*'+ i +'/1000)';
                                     }else if(expAxiz == 4){
                                         tempLayer[i].transform.position.setValue([pXnew,(pYnew + h*(i+1)),0]);
-                                        tempLayer[i].transform.xRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001")';
+                                        tempLayer[i].transform.xRotation.expression = foldDirection +'*thisComp.layer("' + layer.name + '").effect("' + angleNameTemp + '")("ADBE Angle Control-0001").valueAtTime(time-' + 'thisComp.layer("' + layer.name + '").effect("' + delayNameTemp + '")("ADBE Slider Control-0001").value*'+ i +'/1000)';
                                         tempLayer[i].transform.yRotation.expression = "";
                                     }else {
                                         alert(Error2);
                                         break;
                                     }
                                     tempLayer[i].parent = parentTemp;
-                                    if(i == count.text){
-                                        tempLayer[i].commemt = dirTemp + "End";
+                                    tempLayer[i].comment = dirTemp + "\n" + (i+1);
+                                    if(i == count.text - 1){
+                                        tempLayer[i].comment = dirTemp + "\n" + (i+1) + "\nEnd";
                                     }
                                 }
                                     tempRoot.remove();
