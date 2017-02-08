@@ -106,12 +106,16 @@
 	}
 
 	function UI(thisObj){
-		var win = (thisObj instanceof Panel) ? thisObj : new Window("palette",ScriptName,undefined);
-		if(win != null){
-            win.alignChildren = "fill";
-            var grp1 = win.add("group");
-            var dcp = grp1.add("statictext",undefined,Description);
+		var rootwin = (thisObj instanceof Panel) ? thisObj : new Window("palette",ScriptName,undefined);
+		if(rootwin != null){
+            rootwin.alignChildren = "fill";
+            var dcp = rootwin.add("statictext",undefined,Description);
                 dcp.alignment = ["center","center"];
+            var roottab = rootwin.add("tabbedpanel",undefined)
+            //tab1
+            var win = roottab.add("tab",undefined,"单个元素生长");
+                win.alignChildren = "fill";
+            var grp1 = win.add("group");
             var pal1 = win.add("panel");
                 pal1.text = Direction;
                 pal1.orientation = "row";
@@ -139,11 +143,30 @@
                 fromPrev.alignment = ['right', 'center'];
             var grp2 = win.add("group");
                 grp2.alignChildren = "fill";
-
             var btn1 = grp2.add("button",undefined,GButton);
                 btn1.alignment = ['left', 'center'];
             var btn2 = grp2.add("button",undefined,HButton);
                 btn2.alignment = ['right', 'center'];
+            //tab2
+            var win2 = roottab.add("tab",undefined,"分割图层beta");
+                win2.alignChildren = "fill";
+                win2.orientation = "column";
+            var splitDsp = win2.add("statictext",undefined,"将图片分割为预合成。");
+                splitDsp.alignment = ["center","center"];
+            var splitGroup1 = win2.add("group");
+                splitGroup1.alignChildren = "fill";
+                splitGroup1.orientation = "column";
+            var splitXText = splitGroup1.add("statictext",undefined,"横向分割：");
+            var splitXValue = splitGroup1.add("edittext",undefined,"1");
+            var splitYText = splitGroup1.add("statictext",undefined,"纵向分割：");
+            var splitYValue = splitGroup1.add("edittext",undefined,"1");
+            var splitGroup2 = win2.add("group");
+                splitGroup2.orientation = "row";
+                splitGroup2.alignChildren = "fill";
+            var btn3 = splitGroup2.add("button",undefined,"生成");
+                btn3.alignment = ['left', 'center'];
+            var btn4 = splitGroup2.add("button",undefined,HButton);
+                btn4.alignment = ['right', 'center'];
                 btn1.onClick = function(){
                     if(app.project.activeItem.selectedLayers.length > 0){
                         //+检测输入是否大于0的整数?
@@ -269,10 +292,6 @@
                                     var changeDirection = layer.Effects.addProperty("ADBE Checkbox Control");
                                     var changeDirectionNameTemp = ChangeAngle + "_" + dirTemp;
                                         changeDirection.name = changeDirectionNameTemp;
-                                    // var adjustRotation = layer.Effects.addProperty("ADBE Slider Control");
-                                    // var adjustRotationTemp = AdjustRotation + "_" + dirTemp;
-                                    //     adjustRotation.name = adjustRotationTemp;
-                                    ///check parent
                                     if(expAxiz%2 != 0){
                                         layer.effect(angleNameTemp)('ADBE Angle Control-0001').expression = "(2*effect('" + changeDirectionNameTemp + "')('ADBE Checkbox Control-0001')-1)*transform.xRotation";
                                     }else{
@@ -337,9 +356,54 @@
                 btn2.onClick = function () {
                     alert(HelpText,"HELP");
                 }
+                btn3.onClick = function(){
+                    app.beginUndoGroup("split");
+                    var comp = app.project.activeItem;
+                    var splitX = splitXValue.text;
+                    var splitY = splitYValue.text;
+                    if(comp.selectedLayers.length != 0){
+                        var selections = comp.selectedLayers;
+                        for(var n=0;n<selections.length;n++){
+                            var layer = selections[n];
+                            var compW = layer.width;
+                            var compH = layer.height;
+                            var compX = layer.transform.position.value[0];
+                            var compY = layer.transform.position.value[1];
+                            var compL = comp.duration;
+                            var compR = comp.frameRate;
+                            var compName = layer.name + "_PlaceHolder";
+                            var splitedComps = app.project.items.addFolder(layer.name);
+                            var preComp = comp.layers.precompose([layer.index],layer.name,false);
+                            for(var i=0;i<splitX;i++){
+                                for(var j=0;j<splitY;j++){
+                                    var compNameTemp = compName + "_column_" + (i+1) + "_row_" + (j+1);
+                                    var compHTemp = Math.round(compH/splitY);
+                                    var compWTemp = Math.round(compW/splitX);
+                                    var tempCompHolder = app.project.items.addComp(compNameTemp,compWTemp,compHTemp,1,compL,compR);
+                                        tempCompHolder.layers.add(preComp);
+                                        tempCompHolder.layer(1).transform.position.setValue([compW/2 - compWTemp*i,compH/2 - compHTemp*j,0]);
+                                        tempCompHolder.layer(1).name = compName;
+                                        tempCompHolder.parentFolder =  splitedComps;
+                                    var layerNew = comp.layers.add(tempCompHolder);
+                                        tempCompHolder.layer(1).transform.position.setValue([compW/2 - compWTemp*i,compH/2 - compHTemp*j,0]);
+                                        layerNew.transform.position.setValue([compX-compW/2+(0.5+i)*compWTemp,compY-compH/2+(0.5+j)*compHTemp,0]);
+                                        layerNew.threeDLayer = true;
+                                }
+                            }
+                            layer.enabled = false;
+                        }
+                    }else{
+                        alert("请选择图层。");
+                    }
+                    app.endUndoGroup();
+
+                }
+                btn4.onClick = function(){
+                    alert(HelpText,"HELP");
+                }
         }else{
                 alert(ScriptNotRun);
         }
-        return win;
+        return rootwin;
 	   }
 })(this)
