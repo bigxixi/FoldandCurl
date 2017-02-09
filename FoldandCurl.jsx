@@ -160,6 +160,16 @@
             var splitXValue = splitGroup1.add("edittext",undefined,"1");
             var splitYText = splitGroup1.add("statictext",undefined,"纵向分割：");
             var splitYValue = splitGroup1.add("edittext",undefined,"1");
+            var splitPanel1 = win2.add("panel");
+                splitPanel1.text = "参数设置";
+                splitPanel1.alignChildren = "fill";
+                splitPanel1.orientation = "row";
+            var split3dEnable = splitPanel1.add("checkbox",undefined,"分割为3d图层");
+                split3dEnable.alignment = ['left', 'center'];
+                split3dEnable.value = 1;
+            var generateHelper = splitPanel1.add("checkbox",undefined,"生成帮助层");
+                generateHelper.alignment = ['right', 'center'];
+                generateHelper.value = 1;
             var splitGroup2 = win2.add("group");
                 splitGroup2.orientation = "row";
                 splitGroup2.alignChildren = "fill";
@@ -374,11 +384,21 @@
                             var compName = layer.name + "_PlaceHolder";
                             var splitedComps = app.project.items.addFolder(layer.name);
                             var preComp = comp.layers.precompose([layer.index],layer.name,false);
+                            var compHTemp = Math.round(compH/splitY);
+                            var compWTemp = Math.round(compW/splitX);                        
+                            if(generateHelper.value == 1){
+                                var HelperName = "Helper_" + layer.name; 
+                                var helper = comp.layers.addSolid([1,1,1],HelperName,compWTemp,compHTemp,1);
+                                //helper.transform.position.setValue();
+                                //50% op? guideLayer?
+                                if(split3dEnable.value == 1){
+                                    helper.threeDLayer = true;
+                                }
+                            }
                             for(var i=0;i<splitX;i++){
                                 for(var j=0;j<splitY;j++){
                                     var compNameTemp = compName + "_column_" + (i+1) + "_row_" + (j+1);
-                                    var compHTemp = Math.round(compH/splitY);
-                                    var compWTemp = Math.round(compW/splitX);
+
                                     var tempCompHolder = app.project.items.addComp(compNameTemp,compWTemp,compHTemp,1,compL,compR);
                                         tempCompHolder.layers.add(preComp);
                                         tempCompHolder.layer(1).transform.position.setValue([compW/2 - compWTemp*i,compH/2 - compHTemp*j,0]);
@@ -387,7 +407,13 @@
                                     var layerNew = comp.layers.add(tempCompHolder);
                                         tempCompHolder.layer(1).transform.position.setValue([compW/2 - compWTemp*i,compH/2 - compHTemp*j,0]);
                                         layerNew.transform.position.setValue([compX-compW/2+(0.5+i)*compWTemp,compY-compH/2+(0.5+j)*compHTemp,0]);
+                                    if(split3dEnable.value == 1){
                                         layerNew.threeDLayer = true;
+                                    }
+                                    if(generateHelper.value == 1){
+                                        layerNew.parent = helper;
+                                        helper.moveBefore(layerNew);
+                                    }                                     
                                 }
                             }
                             layer.enabled = false;
