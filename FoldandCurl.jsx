@@ -1,8 +1,17 @@
 //Script by bigxixi, contact xixi@bigxixi.com
 (function ALL(thisObj)
 {
-	var ScriptName = "Fold and Curl v1.1";
+	var ScriptName = "Fold and Curl v1.2";
 	var Description = "A script to make curling and folding.";
+    var TabName1 = "Generate Fold or Curl";
+    var TabName2 = "Split Layer";
+    var splitDSPText = "Split selected layers into comps.";
+    var splitHorizon = "Split horizon to:";
+    var splitVertical = "Split vertical to:";
+    var splitSettings = "Split Setting:";
+    var splitTo3D = "split to 3d layers";
+    var generateHelperLayer = "generate a helper layer";
+    var splitBtn = "Split";
 	var Direction = "Direction";
 	var Up = "up";
     var Right = "right";
@@ -15,7 +24,8 @@
     var FromBefore = "Link to Preview";
 	var GButton = "Generate";
 	var HButton = "Help";
-    var HelpText =  'update: now you can add some delay and spring effect to the chain.\n' +    
+    var HelpText =  'v1.2 update: now you can split a layer and attach it to a curl or fold chain.\n' +  
+                    'v1.1 update: now you can add some delay and spring effect to the chain.\n' +    
                     ' How to Use:\n' +
                     '1. Select layer(s) as an element to fold or curl.\n' +
                     'The script generates the curl chain by a layer\'s width or height, which means layers like textlayer or shapelayer should be pre-composed and set the width and height to work properly.\n' +
@@ -48,8 +58,17 @@
 	var Alert2 = "No layers selected.";
 	var ScriptNotRun = "Script is down.Please restart it or contact xixi@bigxixi.com ";
 	if($.locale.toLowerCase() == "zh_cn"){
-		ScriptName = "卷曲与折叠脚本 v1.1";
+		ScriptName = "卷曲与折叠脚本 v1.2";
 		Description = "轻松制作卷曲、折叠效果！";
+        TabName1 = "从单个元素生成";
+        TabName2 = "分割图层";
+        splitDSPText = "将选中图层分割成预合成。";
+        splitHorizon = "横向切割:";
+        splitVertical = "纵向切割:";
+        splitSettings = "分割设置:";
+        splitTo3D = "分割成3d图层";
+        generateHelperLayer = "生成助理图层";
+        splitBtn = "分割";
 		Direction = "方向";
 		Up = "上";
         Right = "右";
@@ -70,7 +89,8 @@
         Freq = "频率";
         Decay = "阻尼";
         ChangeAngle = "换方向";
-        HelpText =  '更新：延迟、弹性效果现已加入豪华午餐，可以在根元素的控制面板调整。'
+        HelpText =  'v1.2更新：新增分割图层功能，可以分割现有图层并连接到已有卷曲or折叠组上。\n' +
+                    'v1.1更新：延迟、弹性效果现已加入豪华午餐，可以在根元素的控制面板调整。\n' +
                     '使用步骤：\n' +
                     '1、选中一个或多个图层，每个被选中的图层将作为被折叠的基本元素。\n' +
                     '注意：生成后每个元素是根据图层的宽或高属性来判断贴合的，也就是说如果想将文字、形状图层等作为基本元素，建议先预合成并设置好长宽再进行。\n' +
@@ -113,7 +133,7 @@
                 dcp.alignment = ["center","center"];
             var roottab = rootwin.add("tabbedpanel",undefined)
             //tab1
-            var win = roottab.add("tab",undefined,"单个元素生长");
+            var win = roottab.add("tab",undefined,TabName1);
                 win.alignChildren = "fill";
             var grp1 = win.add("group");
             var pal1 = win.add("panel");
@@ -148,32 +168,32 @@
             var btn2 = grp2.add("button",undefined,HButton);
                 btn2.alignment = ['right', 'center'];
             //tab2
-            var win2 = roottab.add("tab",undefined,"分割图层beta");
+            var win2 = roottab.add("tab",undefined,TabName2);
                 win2.alignChildren = "fill";
                 win2.orientation = "column";
-            var splitDsp = win2.add("statictext",undefined,"将图片分割为预合成。");
+            var splitDsp = win2.add("statictext",undefined,splitDSPText);
                 splitDsp.alignment = ["center","center"];
             var splitGroup1 = win2.add("group");
                 splitGroup1.alignChildren = "fill";
                 splitGroup1.orientation = "column";
-            var splitXText = splitGroup1.add("statictext",undefined,"横向分割：");
+            var splitXText = splitGroup1.add("statictext",undefined,splitHorizon);
             var splitXValue = splitGroup1.add("edittext",undefined,"1");
-            var splitYText = splitGroup1.add("statictext",undefined,"纵向分割：");
+            var splitYText = splitGroup1.add("statictext",undefined,splitVertical);
             var splitYValue = splitGroup1.add("edittext",undefined,"1");
             var splitPanel1 = win2.add("panel");
-                splitPanel1.text = "参数设置";
+                splitPanel1.text = splitSettings;
                 splitPanel1.alignChildren = "fill";
                 splitPanel1.orientation = "row";
-            var split3dEnable = splitPanel1.add("checkbox",undefined,"分割为3d图层");
+            var split3dEnable = splitPanel1.add("checkbox",undefined,splitTo3D);
                 split3dEnable.alignment = ['left', 'center'];
                 split3dEnable.value = 1;
-            var generateHelper = splitPanel1.add("checkbox",undefined,"生成帮助层");
+            var generateHelper = splitPanel1.add("checkbox",undefined,generateHelperLayer);
                 generateHelper.alignment = ['right', 'center'];
                 generateHelper.value = 1;
             var splitGroup2 = win2.add("group");
                 splitGroup2.orientation = "row";
                 splitGroup2.alignChildren = "fill";
-            var btn3 = splitGroup2.add("button",undefined,"生成");
+            var btn3 = splitGroup2.add("button",undefined,splitBtn);
                 btn3.alignment = ['left', 'center'];
             var btn4 = splitGroup2.add("button",undefined,HButton);
                 btn4.alignment = ['right', 'center'];
@@ -419,7 +439,7 @@
                             layer.enabled = false;
                         }
                     }else{
-                        alert("请选择图层。");
+                        alert(Alert2);
                     }
                     app.endUndoGroup();
 
