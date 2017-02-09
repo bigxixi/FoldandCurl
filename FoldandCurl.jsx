@@ -389,8 +389,9 @@
                             if(generateHelper.value == 1){
                                 var HelperName = "Helper_" + layer.name; 
                                 var helper = comp.layers.addSolid([1,1,1],HelperName,compWTemp,compHTemp,1);
-                                //helper.transform.position.setValue();
-                                //50% op? guideLayer?
+                                    helper.transform.position.setValue([compX-compW/2+0.5*compWTemp,compY-compH/2+0.5*compHTemp,0]);
+                                    helper.guideLayer = true;
+                                    helper.transform.opacity.setValue(50);
                                 if(split3dEnable.value == 1){
                                     helper.threeDLayer = true;
                                 }
@@ -398,7 +399,6 @@
                             for(var i=0;i<splitX;i++){
                                 for(var j=0;j<splitY;j++){
                                     var compNameTemp = compName + "_column_" + (i+1) + "_row_" + (j+1);
-
                                     var tempCompHolder = app.project.items.addComp(compNameTemp,compWTemp,compHTemp,1,compL,compR);
                                         tempCompHolder.layers.add(preComp);
                                         tempCompHolder.layer(1).transform.position.setValue([compW/2 - compWTemp*i,compH/2 - compHTemp*j,0]);
