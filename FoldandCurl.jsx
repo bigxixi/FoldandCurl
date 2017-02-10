@@ -3,7 +3,8 @@
 {
 	var ScriptName = "Fold and Curl v1.2";
 	var Description = "A script to make curling and folding.";
-    var TabName1 = "Generate Fold or Curl";
+    var FoldOrCurlDSP = "Make fold or curl chain.";
+    var TabName1 = "Fold or Curl";
     var TabName2 = "Split Layer";
     var splitDSPText = "Split selected layers into comps.";
     var splitHorizon = "Split horizon to:";
@@ -60,7 +61,8 @@
 	if($.locale.toLowerCase() == "zh_cn"){
 		ScriptName = "卷曲与折叠脚本 v1.2";
 		Description = "轻松制作卷曲、折叠效果！";
-        TabName1 = "从单个元素生成";
+        FoldOrCurlDSP = "从单个元素生成折叠或卷曲链条。";
+        TabName1 = "折叠/卷曲";
         TabName2 = "分割图层";
         splitDSPText = "将选中图层分割成预合成。";
         splitHorizon = "横向切割:";
@@ -131,11 +133,13 @@
             rootwin.alignChildren = "fill";
             var dcp = rootwin.add("statictext",undefined,Description);
                 dcp.alignment = ["center","center"];
-            var roottab = rootwin.add("tabbedpanel",undefined)
+            var roottab = rootwin.add("tabbedpanel",undefined);
             //tab1
             var win = roottab.add("tab",undefined,TabName1);
-                win.alignChildren = "fill";
-            var grp1 = win.add("group");
+                win.alignChildren = "Fill";
+            var genDSPPanel = win.add("panel");
+            var genDsp = genDSPPanel.add("statictext",undefined,FoldOrCurlDSP);
+                genDsp.alignment = ["center","center"];
             var pal1 = win.add("panel");
                 pal1.text = Direction;
                 pal1.orientation = "row";
@@ -171,7 +175,8 @@
             var win2 = roottab.add("tab",undefined,TabName2);
                 win2.alignChildren = "fill";
                 win2.orientation = "column";
-            var splitDsp = win2.add("statictext",undefined,splitDSPText);
+            var splitDSPPanel = win2.add("panel");
+            var splitDsp = splitDSPPanel.add("statictext",undefined,splitDSPText);
                 splitDsp.alignment = ["center","center"];
             var splitGroup1 = win2.add("group");
                 splitGroup1.alignChildren = "fill";
