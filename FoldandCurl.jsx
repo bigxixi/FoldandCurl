@@ -9,8 +9,8 @@
     var splitHorizon = "Split horizon to:";
     var splitVertical = "Split vertical to:";
     var splitSettings = "Split Setting:";
-    var splitTo3D = "split to 3d layers";
-    var generateHelperLayer = "generate a helper layer";
+    var splitTo3D = "3d layers";
+    var generateHelperLayer = "helper layer";
     var splitBtn = "Split";
 	var Direction = "Direction";
 	var Up = "up";
@@ -211,6 +211,10 @@
                                     layer.parent = null;
                                     layer.transform.xRotation.expression = "";
                                     layer.transform.yRotation.expression = "";
+                                    //remove all effects
+                                    for(j = layer.Effects.numProperties; j > 0; j--){
+                                        layer.Effects.property(j).remove();
+                                    }
                                 }
                                 var layerNameTemp = layer.name;
                                 if(layerNameTemp.substring(layerNameTemp.length-8,layerNameTemp.length) != "_control"){
@@ -255,14 +259,10 @@
                                     alert(Error1);
                                     break;
                                 };
-                                //remove all effects
-                                for(j = layer.Effects.numProperties; j > 0; j--){
-                                    layer.Effects.property(j).remove();
-                                }
                                 var tempRoot = layer.duplicate();
                                     tempRoot.transform.anchorPoint.setValue([aXnew,aYnew,0]);
                                     tempRoot.transform.position.setValue([pXnew,pYnew,0]);
-                                tempRoot.comment = dirTemp;
+                                    tempRoot.comment = dirTemp;
                                 var angle = layer.Effects.addProperty("ADBE Angle Control");
                                 var angleNameTemp = Angle + "_" + dirTemp;
                                     angle.name = angleNameTemp;
