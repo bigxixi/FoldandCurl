@@ -1,7 +1,7 @@
 //Script by bigxixi, contact xixi@bigxixi.com
 (function ALL(thisObj)
 {
-	var ScriptName = "Fold and Curl v1.2";
+	var ScriptName = "Fold and Curl v1.3";
 	var Description = "A script to make curling and folding.";
     var FoldOrCurlDSP = "Make fold or curl chain.";
     var TabName1 = "Fold or Curl";
@@ -25,7 +25,22 @@
     var FromBefore = "Link to Preview";
 	var GButton = "Generate";
 	var HButton = "Help";
-    var HelpText =  'v1.2 update: now you can split a layer and attach it to a curl or fold chain.\n' +  
+    var TabName3 = "Other Tools";
+    var Tab3DSP = "Parent or sequence layers.";
+    var pLinkerDSP = "Parenting";
+    var childrenLayerDSP = "Children Indexs";
+    var parentLayerDSP = "Parent Indexs";
+    var fromDSP = "from";
+    var toDSP = "to";
+    var sqcerDSP = "Layer Sequencer";
+    var sqcFrameDSP = "Frames:";
+    var upwardsDSP = "Up";
+    var downwarsDSP = "Down";
+    var randomDSP = "Random";
+    var sqcBtnText = "Sequence It!";
+    var parentBtnText = "Parent Them!";
+    var HelpText =  'v1.3 update: add layer parent tool and layer sequence tool.\n' +  
+                    'v1.2 update: now you can split a layer and attach it to a curl or fold chain.\n' +  
                     'v1.1 update: now you can add some delay and spring effect to the chain.\n' +    
                     ' How to Use:\n' +
                     '1. Select layer(s) as an element to fold or curl.\n' +
@@ -55,11 +70,13 @@
 	var Error1 = "Error1";
     var Error2 = "Error2";
     var Error3 = "Error3";
+    var Error4 = "Error4";
     var Alert1 = "Can not do it with Camera and Light layers.";
 	var Alert2 = "No layers selected.";
+    var Alert3 = "The count of the children layer and parent layer NOT match. Please check them.";
 	var ScriptNotRun = "Script is down.Please restart it or contact xixi@bigxixi.com ";
 	if($.locale.toLowerCase() == "zh_cn"){
-		ScriptName = "卷曲与折叠脚本 v1.2";
+		ScriptName = "卷曲与折叠脚本 v1.3";
 		Description = "轻松制作卷曲、折叠效果！";
         FoldOrCurlDSP = "从单个元素生成折叠或卷曲链条。";
         TabName1 = "折叠/卷曲";
@@ -91,7 +108,22 @@
         Freq = "频率";
         Decay = "阻尼";
         ChangeAngle = "换方向";
-        HelpText =  'v1.2更新：新增分割图层功能，可以分割现有图层并连接到已有卷曲or折叠组上。\n' +
+        TabName3 = "其他工具";
+        Tab3DSP = "批量设置父子级、图层时间差。";
+        pLinkerDSP = "批量父子级";
+        childrenLayerDSP = "子图层序号";
+        parentLayerDSP = "父图层序号";
+        fromDSP = "从";
+        toDSP = "到";
+        sqcerDSP = "图层时间偏移";
+        sqcFrameDSP = "帧数：";
+        upwardsDSP = "向上";
+        downwarsDSP = "向下";
+        randomDSP = "随机";
+        sqcBtnText = "时间偏移！";
+        parentBtnText = "连接父子级！";
+        HelpText =  'v1.3更新：新增批量连接父子集和图层时间差功能。\n' +
+                    'v1.2更新：新增分割图层功能，可以分割现有图层并连接到已有卷曲or折叠组上。\n' +
                     'v1.1更新：延迟、弹性效果现已加入豪华午餐，可以在根元素的控制面板调整。\n' +
                     '使用步骤：\n' +
                     '1、选中一个或多个图层，每个被选中的图层将作为被折叠的基本元素。\n' +
@@ -115,8 +147,11 @@
 		Error1 = "发生未知错误。代码1。";
         Error2 = "发生未知错误。代码2。";
         Error3 = "发生未知错误。代码3。";
+        Error4 = "发生未知错误。代码4。";
         Alert1 = "无法对摄像机图层和灯光图层进行操作！";
 		Alert2 = "请选择图层。";
+        Alert3 = "父图层与子图层数目不相等，请检查。";
+        
 		ScriptNotRun = "脚本运行失败，请重新运行。";
 	}
 	var drawUI = UI(thisObj);
@@ -143,7 +178,7 @@
             var pal1 = win.add("panel");
                 pal1.text = Direction;
                 pal1.orientation = "row";
-                pal1.spacing = 20;
+                pal1.spacing = 50;
             var upChecked = pal1.add("radiobutton",undefined,Up);
             var rightChecked = pal1.add("radiobutton",undefined,Right);
                 rightChecked.value = 1;
@@ -202,6 +237,66 @@
                 btn3.alignment = ['left', 'center'];
             var btn4 = splitGroup2.add("button",undefined,HButton);
                 btn4.alignment = ['right', 'center'];
+
+            //tab3
+            var win3 = roottab.add("tab",undefined,TabName3);
+                win3.alignChildren = "fill";
+                win3.orientation = "column";
+            var tab3DSPpanel = win3.add("panel");
+            var tab3DSPText = tab3DSPpanel.add("statictext",undefined,Tab3DSP);
+            var toolGroup = win3.add("group");
+                toolGroup.alignChildren = "fill";
+                toolGroup.orientation = "row";
+            var parentLinkerPanel = toolGroup.add("panel");
+                parentLinkerPanel.text = pLinkerDSP;
+                parentLinkerPanel.alignChildren = "fill";
+                parentLinkerPanel.orientation = "column";
+            var parentLinkerGroup1 = parentLinkerPanel.add("group");
+                parentLinkerGroup1.orientation = "column";
+            var childrenPanel = parentLinkerGroup1.add("panel");
+                childrenPanel.text = childrenLayerDSP;
+                childrenPanel.orientation = "row";
+            var childrenLayerFrom = childrenPanel.add("statictext",undefined,fromDSP);
+            var childrenLayerFromValue = childrenPanel.add("edittext",undefined,1);
+                childrenLayerFromValue.bounds = {x:0, y:0, width:30, height:20};
+            var childrenLayerto = childrenPanel.add("statictext",undefined,toDSP);
+            var childrenLayertoValue = childrenPanel.add("edittext",undefined,1);
+                childrenLayertoValue.bounds = {x:0, y:0, width:30, height:20};
+            var parentPanel = parentLinkerGroup1.add("panel");
+                parentPanel.text = parentLayerDSP;
+                parentPanel.orientation = "row";
+            var parentLayerFrom = parentPanel.add("statictext",undefined,fromDSP);
+            var parentLayerFromValue = parentPanel.add("edittext",undefined,1);
+                parentLayerFromValue.bounds = {x:0, y:0, width:30, height:20};
+            var parentLayerto = parentPanel.add("statictext",undefined,toDSP);
+            var parentLayertoValue = parentPanel.add("edittext",undefined,1);
+                parentLayertoValue.bounds = {x:0, y:0, width:30, height:20};
+            var parentBtn = parentLinkerPanel.add("button",undefined,parentBtnText);
+            var sequencerPanel = toolGroup.add("panel");
+                sequencerPanel.text = sqcerDSP;
+                sequencerPanel.alignChildren = "fill";
+                sequencerPanel.orientation = "column";
+            var sqcGroup1 = sequencerPanel.add("group");
+                sqcGroup1.alignChildren = "fill";
+                sqcGroup1.orientation = "column";
+                sqcGroup1.bounds = {x:0, y:0, width:80, height:80};
+            var upwardsCheck = sqcGroup1.add("radiobutton",undefined,upwardsDSP);
+                //upwardsCheck.alignment = ['left', 'center'];
+                upwardsCheck.value = true;
+            var downwardsCheck = sqcGroup1.add("radiobutton",undefined,downwarsDSP);
+                //downwardsCheck.alignment = ['center', 'center'];
+            var randomCheck = sqcGroup1.add("radiobutton",undefined,randomDSP);
+                //randomCheck.alignment = ['left', 'center'];
+            var sqcGroup2 = sequencerPanel.add("group");
+                sqcGroup2.alignChildren = "fill";
+                sqcGroup2.orientation = "row";
+                sqcGroup2.bounds = {x:0, y:0, width:80, height:20};
+            var sqcFrameText = sqcGroup2.add("statictext",undefined,sqcFrameDSP);
+            var sqcFrameValue = sqcGroup2.add("edittext",undefined,1);
+                sqcFrameValue.bounds = {x:0, y:0, width:40, height:20};
+            
+            var sqcBtn = sequencerPanel.add("button",undefined,sqcBtnText);
+            
                 btn1.onClick = function(){
                     if(app.project.activeItem.selectedLayers.length > 0){
                         //+检测输入是否大于0的整数?
@@ -452,6 +547,49 @@
                 btn4.onClick = function(){
                     alert(HelpText,"HELP");
                 }
+                parentBtn.onClick = function(){
+                    app.beginUndoGroup("parent");
+                    var numChildren = Math.abs(childrenLayerFromValue.text - childrenLayertoValue.text) + 1;
+                    var numParent = Math.abs(parentLayerFromValue.text - parentLayertoValue.text) + 1;
+                    if(numChildren == numParent){
+                        var deltaC = Number(childrenLayertoValue.text) > Number(childrenLayerFromValue.text)? 1:-1;
+                        var deltaP = Number(parentLayertoValue.text) > Number(parentLayerFromValue.text)? 1:-1;
+                        for(var i = 0;i<numChildren;i++){
+                            app.project.activeItem.layer(Number(childrenLayerFromValue.text)+i*deltaC).parent = app.project.activeItem.layer(Number(parentLayerFromValue.text)+i*deltaP);
+                        }
+
+                    }else{
+                        alert(Alert3);
+                        alert(numChildren);
+                        alert(numParent)
+                    }
+                    app.endUndoGroup();
+                }
+                sqcBtn.onClick = function(){
+                    app.beginUndoGroup("sequence");
+                    if(app.project.activeItem.selectedLayers.length > 0){
+                        if(upwardsCheck.value == true){
+                            for(var i=0;i<app.project.activeItem.selectedLayers.length;i++){
+                                app.project.activeItem.selectedLayers[app.project.activeItem.selectedLayers.length - 1 - i].startTime = i*Number(sqcFrameValue.text)/app.project.activeItem.frameRate;
+                            }
+                        }else if(downwardsCheck.value == true){
+                            for(var i=0;i<app.project.activeItem.selectedLayers.length;i++){
+                                app.project.activeItem.selectedLayers[i].startTime = i*Number(sqcFrameValue.text)/app.project.activeItem.frameRate;
+                            }                       
+                        }else if(randomCheck.value == true){
+                            for(var i=0;i<app.project.activeItem.selectedLayers.length;i++){
+                                app.project.activeItem.selectedLayers[i].startTime = Math.round(Math.random()*Number(sqcFrameValue.text))/app.project.activeItem.frameRate;
+                            }
+                        }else{
+                            alert(Error4);
+                        }
+                        
+                    }else{
+                        alert(Alert2);
+                    }
+                    
+                }
+                app.endUndoGroup();
         }else{
                 alert(ScriptNotRun);
         }
