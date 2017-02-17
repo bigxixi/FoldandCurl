@@ -3,9 +3,11 @@ An Adobe After Effect script to make curling and folding.
 [Demo1](http://www.bilibili.com/video/av8042868/index_1.html)  
 [Demo2](http://www.bilibili.com/video/av8042868/index_2.html)  
 
+`v1.3 update: add layer parent tool and layer sequence tool.`  
 `v1.2 update: now you can split a layer and attach it to a curl or fold chain.`  
 `v1.1 update: now you can add some delay and spring effect to the chain.`  
   
+`1.3更新：新增批量连接父子集和图层时间差功能。`
 `v1.2更新：新增分割图层功能，可以分割现有图层并连接到已有卷曲or折叠组上。`  
 `v1.1更新：延迟、弹性效果现已加入豪华午餐，可以在根元素的控制面板调整。`  
 
