@@ -74,6 +74,7 @@
     var Alert1 = "Can not do it with Camera and Light layers.";
 	var Alert2 = "No layers selected.";
     var Alert3 = "The count of the children layer and parent layer NOT match. Please check them.";
+    var Alert5 = "Please check your input, numbers should be integer.";
 	var ScriptNotRun = "Script is down.Please restart it or contact xixi@bigxixi.com ";
 	if($.locale.toLowerCase() == "zh_cn"){
 		ScriptName = "卷曲与折叠脚本 v1.3";
@@ -151,6 +152,7 @@
         Alert1 = "无法对摄像机图层和灯光图层进行操作！";
 		Alert2 = "请选择图层。";
         Alert3 = "父图层与子图层数目不相等，请检查。";
+        Alert5 = "请输入正整数。";
         
 		ScriptNotRun = "脚本运行失败，请重新运行。";
 	}
@@ -168,7 +170,7 @@
             rootwin.alignChildren = "fill";
             var dcp = rootwin.add("statictext",undefined,Description);
                 dcp.alignment = ["center","center"];
-            var roottab = rootwin.add("tabbedpanel",undefined);
+            var roottab = rootwin.add("tabbedpanel");
             //tab1
             var win = roottab.add("tab",undefined,TabName1);
                 win.alignChildren = "Fill";
@@ -294,12 +296,19 @@
             var sqcFrameText = sqcGroup2.add("statictext",undefined,sqcFrameDSP);
             var sqcFrameValue = sqcGroup2.add("edittext",undefined,1);
                 sqcFrameValue.bounds = {x:0, y:0, width:40, height:20};
-            
             var sqcBtn = sequencerPanel.add("button",undefined,sqcBtnText);
             
+            var checkInput = function(input){
+                var testInput = new RegExp("^[0-9]*[1-9][0-9]*$");
+                return testInput.test(input);
+            }
+
                 btn1.onClick = function(){
+                    if(checkInput(count.text) == false){
+                        alert(Alert5);
+                        return;
+                    }
                     if(app.project.activeItem.selectedLayers.length > 0){
-                        //+检测输入是否大于0的整数?
                         app.beginUndoGroup("generate");
                         app.project.activeItem.hideShyLayers = true;
                         for(var n=0;n<app.project.activeItem.selectedLayers.length;n++){
@@ -487,6 +496,10 @@
                     alert(HelpText,"HELP");
                 }
                 btn3.onClick = function(){
+                    if(checkInput(splitXValue.text) == false || checkInput(splitYValue.text) == false){
+                        alert(Alert5);
+                        return;
+                    }
                     app.beginUndoGroup("split");
                     var comp = app.project.activeItem;
                     var splitX = splitXValue.text;
@@ -548,10 +561,16 @@
                     alert(HelpText,"HELP");
                 }
                 parentBtn.onClick = function(){
+                    if(checkInput(childrenLayerFromValue.text) == false || checkInput(childrenLayertoValue.text) == false || checkInput(parentLayertoValue.text) == false || checkInput(parentLayerFromValue.text) == false){
+                        alert(Alert5);
+                        return;
+                    }
                     app.beginUndoGroup("parent");
                     var numChildren = Math.abs(childrenLayerFromValue.text - childrenLayertoValue.text) + 1;
                     var numParent = Math.abs(parentLayerFromValue.text - parentLayertoValue.text) + 1;
-                    if(numChildren == numParent){
+                    var maxTemp = Math.max(parentLayerFromValue.text, parentLayertoValue.text);
+                    var minTemp = Math.min(parentLayerFromValue.text, parentLayertoValue.text);
+                    if(numChildren == numParent && (childrenLayerFromValue.text < minTemp || childrenLayerFromValue.text > maxTemp) && (childrenLayertoValue.text < minTemp || childrenLayertoValue.text > maxTemp)){
                         var deltaC = Number(childrenLayertoValue.text) > Number(childrenLayerFromValue.text)? 1:-1;
                         var deltaP = Number(parentLayertoValue.text) > Number(parentLayerFromValue.text)? 1:-1;
                         for(var i = 0;i<numChildren;i++){
@@ -560,12 +579,14 @@
 
                     }else{
                         alert(Alert3);
-                        alert(numChildren);
-                        alert(numParent)
                     }
                     app.endUndoGroup();
                 }
                 sqcBtn.onClick = function(){
+                    if(checkInput(sqcFrameValue.text) == false){
+                        alert(Alert5);
+                        return;
+                    }
                     app.beginUndoGroup("sequence");
                     if(app.project.activeItem.selectedLayers.length > 0){
                         if(upwardsCheck.value == true){
@@ -596,3 +617,5 @@
         return rootwin;
 	   }
 })(this)
+
+
