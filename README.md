@@ -20,9 +20,9 @@ AE脚本，轻松制作卷曲、折叠效果.
 
 # How to Install:
 Download the [`ZIP file`](https://github.com/bigxixi/FoldandCurl/archive/master.zip) and unzip.</br>
-Run AE, click `File`->`Script`->`Run Script File...` and choose the `SaveFrameAsPNG-Plus.jsx` file.  
+Run AE, click `File`->`Script`->`Run Script File...` and choose the `FoldandCurl.jsx` file.  
 </br>
-Or you can copy the `SaveFrameAsPNG-Plus.jsx` to your AE script folder:
+Or you can copy the `FoldandCurl.jsx` to your AE script folder:
 >**Windows:**  
 >`C:\Program Files\Adobe\Adobe After Effects <version>\Support Files\Script\ScriptUI Panels\`  
 >**Mac:**  
