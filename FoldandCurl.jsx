@@ -39,26 +39,35 @@
     var randomDSP = "Random";
     var sqcBtnText = "Sequence It!";
     var parentBtnText = "Parent Them!";
-    var HelpText =  'v1.3 update: add layer parent tool and layer sequence tool.\n' +  
-                    'v1.2 update: now you can split a layer and attach it to a curl or fold chain.\n' +  
-                    'v1.1 update: now you can add some delay and spring effect to the chain.\n' +    
-                    ' How to Use:\n' +
-                    '1. Select layer(s) as an element to fold or curl.\n' +
-                    'The script generates the curl chain by a layer\'s width or height, which means layers like textlayer or shapelayer should be pre-composed and set the width and height to work properly.\n' +
-                    '2. Take a direction.\n' +
-                    '3. Input the count of elements to be generated.\n' +
-                    '4. Select the behavior, fold or curl.  \n' +
-                    '5. If you want to generate a sub chain of a preview one, check the "Link to Preview".\n' +
-                    '\n' +
-                    'note:\n' +
-                    '1. Add ONLY ONE direction to the ROOT element.\n' +
-                    '2. Don\'t generate more then once in one direction.\n' +
-                    '\n' +
-                    'How to control:\n' +
-                    '1. Select the root element - effect - angle control to control the fold or curl progress.\n' +
-                    '2. You can toggle the orientation of each "sub chain" by just selecting them.\n' +
-                    '\n' +
-                    'contact: xixi@bigxixi.com\n';
+    var HelpText =  "Introduction\n" +
+                    "This script can do: Generate fold or curl chains, split an image, mulitiple parenting, and layer time shift.\n" + 
+                    "\n" + 
+                    "Generate fold or curl chains:\n" + 
+                    "1. Select layer(s) as an element to fold or curl.\n" + 
+                    "The script generates the curl chain by a layer\s width or height, which means layers like textlayer or shapelayer should be pre-composed and set the width and height to work properly.\n" + 
+                    "2. Take a direction.\n" + 
+                    "3. Input the count of elements to be generated.\n" + 
+                    "4. Select the behavior, fold or curl.  \n" + 
+                    "5. If you want to generate a sub chain of a preview one, check the \"Link to Preview\".\n" + 
+                    "\n" + 
+                    "note:\n" + 
+                    "1. Add ONLY ONE direction to the ROOT element, other elements can be added up to 3 directions.\n" + 
+                    "2. Dont generate more then once in one direction.\n" + 
+                    "\n" + 
+                    "Split image:\n" + 
+                    "Choose an image layer, input split counts in vertical and horizon. \n" + 
+                    "If the width or height(in px) cannot be exact divided by your input, the split image might be a little mismatch.\n" + 
+                    "\n" + 
+                    "Mulitiple parenting and layer time shift:\n" + 
+                    "You can parent parent the splited images to a fold or curl chain(input the layer index), just match the number of parents and children, and the order. \n" + 
+                    "Layer time shift - sequence layer by input frame counts. \n" + 
+                    "\n" + 
+                    "How to control:\n" + 
+                    "1. Select the root element - effect - angle control to control the fold or curl progress.\n" + 
+                    "2. You can toggle the orientation of each \"sub chain\" by just selecting them.\n" + 
+                    "3. You can make some delay and spring effect on the root elemnt's effect control panel, just try it.\n" + 
+                    "\n" + 
+                    "contact: xixi@bigxixi.com\n;";
     var Angle = "Angel";
     var ChangeAngle = "Change_Orientation";
     var SpringCheck = "Add_Spring_Effect";
@@ -123,28 +132,35 @@
         randomDSP = "随机";
         sqcBtnText = "时间偏移！";
         parentBtnText = "连接父子级！";
-        HelpText =  'v1.3更新：新增批量连接父子集和图层时间差功能。\n' +
-                    'v1.2更新：新增分割图层功能，可以分割现有图层并连接到已有卷曲or折叠组上。\n' +
-                    'v1.1更新：延迟、弹性效果现已加入豪华午餐，可以在根元素的控制面板调整。\n' +
-                    '使用步骤：\n' +
-                    '1、选中一个或多个图层，每个被选中的图层将作为被折叠的基本元素。\n' +
-                    '注意：生成后每个元素是根据图层的宽或高属性来判断贴合的，也就是说如果想将文字、形状图层等作为基本元素，建议先预合成并设置好长宽再进行。\n' +
-                    '\n' +
-                    '2、选择生成链条的方向。\n' +
-                    '3、输入希望复制多少个基本元素。请输入大于0的整数否则会出问题。\n' +
-                    '4、选择折叠或卷曲方式。\n' +
-                    '5、如果选中的图层是之前构建的元素：若想作为分支继承之前的链条，请勾选继承之前元素。否则将会断开之前的链条，以选中的元素为新元素构建链条。\n' +
-                    '6、点击生成。\n' +
-                    '\n' +
-                    '注意：\n' +
-                    '1、根元素暂时只能生成一个方向，不要多生成。\n' +
-                    '2、每个元素同一方向只能生成一次，不然会出错。\n' +
-                    '\n' +
-                    '生成之后的控制：\n' +
-                    '1、选中根元素-效果-角度，可以控制整个链条的折叠或卷曲进度。\n' +
-                    '2、每个继承生成的元素可以控制以它为元素生成的链条的卷曲或折叠方向。\n' +
-                    '\n' +
-                    '联系我：xixi@bigxixi.com\n';
+        HelpText =  "说明：\n" +
+                    "脚本有三个标签对应三大块儿功能-生成卷曲/折叠链条、分割图像、其他功能（分割后的图像与生成的链条进行父子级链接、图层时间偏移）。\n" + 
+                    "\n" + 
+                    "·生成卷曲/折叠链条功能使用步骤：\n" + 
+                    "1、选中一个或多个图层，每个被选中的图层将作为被折叠的基本元素。\n" + 
+                    "注意：生成后每个元素是根据图层的宽或高属性来判断贴合的，也就是说如果想将文字、形状图层等作为基本元素，建议先预合成并设置好长宽再进行。\n" + 
+                    "2、选择生成链条的方向。\n" + 
+                    "3、输入希望复制多少个基本元素。请输入大于0的整数否则会出问题。\n" + 
+                    "4、选择折叠或卷曲方式。\n" + 
+                    "5、如果选中的图层是之前构建的元素：若想作为分支继承之前的链条，请勾选继承之前元素。否则将会断开之前的链条，以选中的元素为新元素构建链条。\n" + 
+                    "6、点击生成。\n" + 
+                    "\n" + 
+                    "注意：\n" + 
+                    "1、单个元素可以扩展多个方向，但根元素暂时只能生成一个方向，不要多生成。\n" + 
+                    "2、每个元素同一方向只能生成一次，不然会出错。\n" + 
+                    "\n" + 
+                    "·分割图像功能：\n" + 
+                    "选中要分割的图像，输入横向和纵向需要分割的份数。注意，如果份数无法被长或宽整除会被四舍五入造成图像有微小的偏移，我也木有太好的办法。\n" + 
+                    "\n" + 
+                    "·其他功能\n" + 
+                    "1、批量链接父子级 - 根据图层序号批量链接，注意顺序，连接前注意对齐。\n" + 
+                    "2、图层时间偏移 - 类似AE自带的图层时间偏移功能，可以选择偏移方向、随机偏移。\n" + 
+                    "\n" + 
+                    "生成之后的控制：\n" + 
+                    "1、选中根元素-效果-角度，可以控制整个链条的折叠或卷曲进度。\n" + 
+                    "2、每个继承生成的元素可以控制以它为元素生成的链条的卷曲或折叠方向。\n" + 
+                    "3、可以在根元素上控制延迟、弹性等选择，具体效果可以自己试试啦。\n" + 
+                    "\n" + 
+                    "有问题请联系 xixi@bigxixi.com";
 		Error1 = "发生未知错误。代码1。";
         Error2 = "发生未知错误。代码2。";
         Error3 = "发生未知错误。代码3。";
