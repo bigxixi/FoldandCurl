@@ -1,5 +1,8 @@
 # FoldandCurl
 An Adobe After Effect script to make curling and folding.  
+
+![](https://img.zcool.cn/community/02e12f58c8d85ea801219c778b5cf4.gif)
+
 [Demo1](http://www.bilibili.com/video/av8042868/index_1.html)  
 [Demo2](http://www.bilibili.com/video/av8042868/index_2.html)  
 
@@ -14,9 +17,22 @@ An Adobe After Effect script to make curling and folding.
 AE脚本，轻松制作卷曲、折叠效果.  
 [->观看演示1<-](http://www.bilibili.com/video/av8042868/index_2.html)  
 [->观看演示2<-](http://www.bilibili.com/video/av8042868/index_2.html)  
+
+教学视频：  
+[->教学演示1<-](https://www.bilibili.com/video/av9177334/?p=1)  
+[->教学演示1<-](https://www.bilibili.com/video/av9177334/?p=2)  
+[->教学演示1<-](https://www.bilibili.com/video/av9177334/?p=3)  
+
+[->观看演示2<-](http://www.bilibili.com/video/av8042868/index_2.html)  
+[->观看演示2<-](http://www.bilibili.com/video/av8042868/index_2.html)  
 ## GIF Demos:
 ![](https://github.com/bigxixi/ReadMe-Resources/blob/master/FoldandCurl/fold_demo.gif)
 ![](https://github.com/bigxixi/ReadMe-Resources/blob/master/FoldandCurl/curl_demo.gif)  
+![](https://img.zcool.cn/community/023b7c58c8d7f7a801219c771e5b86.gif)
+![](https://img.zcool.cn/community/0208b058c8d806a801219c77f849c3.gif)
+![](https://img.zcool.cn/community/02f62a58c8d849a801219c771e57e5.gif)
+![](https://img.zcool.cn/community/02a88458c8d86fa801219c7783cca8.gif)
+
 
 # How to Install:
 Download the [`ZIP file`](https://github.com/bigxixi/FoldandCurl/archive/master.zip) and unzip.</br>
